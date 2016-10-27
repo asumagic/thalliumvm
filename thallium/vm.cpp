@@ -40,19 +40,46 @@ namespace thallium
 			const Opcode op = static_cast<Opcode>(_memory[ip]);
             const uint64_t argument = deserialize_type<uint64_t>(begin(_memory) + ip + 1);
 
+			// @TODO Use C++17's structured bindings for switch cases
+
 			switch (op)
 			{
-				case Opcode::mov: {
-					const auto darg = decode<uint16_t, uint16_t>(argument);
-					_regs[std::get<1>(darg)] = _regs[std::get<0>(darg)]; // copy the source into the destination
-				} break;
+			case Opcode::mov: {
+				const auto darg = decode<uint16_t, uint16_t>(argument);
+				_regs[std::get<1>(darg)] = _regs[std::get<0>(darg)];
+			} break;
 
-				case Opcode::imm:break;
-				case Opcode::mget:break;
-				case Opcode::mset:break;
-				case Opcode::teq:break;
-				case Opcode::tgt:break;
-				case Opcode::tlt:break;
+			case Opcode::imm: {
+				const auto darg = decode<uint32_t, uint16_t>(argument);
+				_regs[std::get<1>(darg)] = std::get<0>(darg);
+			} break;
+
+			case Opcode::mget: {
+				const auto darg = decode<uint16_t, uint16_t>(argument);
+				_regs[std::get<1>(darg)] = deserialize_type<uint32_t>(begin(_memory) + _regs[std::get<0>(darg)]);
+			} break;
+
+			case Opcode::mset: {
+				const auto darg = decode<uint16_t, uint16_t>(argument);
+				serialize_type(_regs[std::get<1>(darg)], begin(_memory) + _regs[std::get<0>(darg)]);
+			} break;
+
+			case Opcode::teq: {
+				const auto darg = decode<uint16_t, uint16_t>(argument);
+				_regs.set_flag(Flags::Test, _regs[std::get<0>(darg)] == _regs[std::get<1>(darg)]);
+			} break;
+
+			case Opcode::tgt: {
+				const auto darg = decode<uint16_t, uint16_t>(argument);
+				_regs.set_flag(Flags::Test, _regs[std::get<0>(darg)] > _regs[std::get<1>(darg)]);
+			} break;
+
+			case Opcode::tlt: {
+				const auto darg = decode<uint16_t, uint16_t>(argument);
+				_regs.set_flag(Flags::Test, _regs[std::get<0>(darg)] < _regs[std::get<1>(darg)]);
+			} break;
+
+				/*
 				case Opcode::cjmp:break;
 				case Opcode::cjmpr:break;
 				case Opcode::call:break;
@@ -69,7 +96,7 @@ namespace thallium
 				case Opcode::udiv:break;
 				case Opcode::umod:break;
 				case Opcode::dout:break;
-				case Opcode::din:break;
+				case Opcode::din:break;*/
 
 				default:
 					error(TimeOfError::Runtime, ErrorType::Fatal, "illegal instruction");
@@ -77,7 +104,6 @@ namespace thallium
 			}
 
 			ip += Instruction::size();
-			running = false;
 		}
 	}
 }

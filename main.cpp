@@ -4,7 +4,10 @@ int main()
 {
     using namespace thallium;
 	VM vm{1024};
-	vm.import_program({{Opcode::mov, 0x0000000000020001}});
+	vm.import_program({
+		{Opcode::imm, 0x0000000AFFFFFFFF},
+		{Opcode::mov, 0x00000000000B000A}
+	});
     vm.run();
 	return 0;
 }
