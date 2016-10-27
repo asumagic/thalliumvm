@@ -95,10 +95,10 @@ namespace thallium
 			case Opcode::call: {
 				const auto darg = decode<uint32_t>(argument);
 
-				// push sp + 1 to the stack
+				// push ip + 1 to the stack
 				vmreg_t& sp = _regs[SPRegisters::sp];
-				serialize_type(ip + Instruction::size(), begin(_memory) + sp);
 				sp += sizeof(vmreg_t);
+				serialize_type(ip + Instruction::size(), begin(_memory) + sp);
 
 				ip = std::get<0>(darg);
 			} break;
@@ -106,10 +106,10 @@ namespace thallium
 			case Opcode::callr: {
 				const auto darg = decode<uint16_t>(argument);
 
-				// push sp + 1 to the stack
+				// push ip + 1 to the stack
 				vmreg_t& sp = _regs[SPRegisters::sp];
-				serialize_type(ip + Instruction::size(), begin(_memory) + sp);
 				sp += sizeof(vmreg_t);
+				serialize_type(ip + Instruction::size(), begin(_memory) + sp);
 
 				ip = _regs[std::get<0>(darg)];
 			} break;
@@ -181,8 +181,8 @@ namespace thallium
 				const auto darg = decode<uint16_t>(argument);
 
 				vmreg_t& sp = _regs[SPRegisters::sp];
-				serialize_type(std::get<0>(darg), begin(_memory) + sp);
 				sp += sizeof(vmreg_t);
+				serialize_type(_regs[std::get<0>(darg)], begin(_memory) + sp);
 			} break;
 
 			case Opcode::pop: {
@@ -204,6 +204,9 @@ namespace thallium
 
 			if (ip == init_ip)
 				ip += Instruction::size();
+
+			if (ip >= _memory.size())
+				error(TimeOfError::Runtime, ErrorType::Fatal, "illegal instruction : ip pointed to memory[" + std::to_string(ip) + "], but was out of bounds (memory size = " + std::to_string(_memory.size()) + ").");
 		}
 	}
 }
