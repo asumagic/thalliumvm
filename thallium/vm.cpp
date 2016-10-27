@@ -79,9 +79,25 @@ namespace thallium
 				_regs.set_flag(Flags::Test, _regs[std::get<0>(darg)] < _regs[std::get<1>(darg)]);
 			} break;
 
+			case Opcode::cjmp: {
+				const auto darg = decode<uint32_t>(argument);
+				if (_regs.get_flag(Flags::Test))
+				{
+					_regs[SPRegisters::ip] = std::get<0>(darg);
+					goto skip_ip_update;
+				}
+			} break;
+
+			case Opcode::cjmpr: {
+				const auto darg = decode<uint32_t>(argument);
+				if (_regs.get_flag(Flags::Test))
+				{
+					_regs[SPRegisters::ip] = _regs[std::get<0>(darg)];
+					goto skip_ip_update;
+				}
+			} break;
+
 				/*
-				case Opcode::cjmp:break;
-				case Opcode::cjmpr:break;
 				case Opcode::call:break;
 				case Opcode::callr:break;
 				case Opcode::sbit:break;
@@ -98,12 +114,13 @@ namespace thallium
 				case Opcode::dout:break;
 				case Opcode::din:break;*/
 
-				default:
-					error(TimeOfError::Runtime, ErrorType::Fatal, "illegal instruction");
-					break;
+			default: {
+				error(TimeOfError::Runtime, ErrorType::Fatal, "illegal instruction : memory[" + std::to_string(ip) + "] has unknown opcode " + std::to_string(_memory[ip]));
+			} break;
 			}
 
 			ip += Instruction::size();
+			skip_ip_update: {}
 		}
 	}
 }
