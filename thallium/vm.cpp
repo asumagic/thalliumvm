@@ -17,7 +17,7 @@ namespace thallium
 		// make sure the program fits in memory
 		tassert(tprogram_size <= _memory.size(),
 				TimeOfError::Preload, ErrorType::Fatal,
-				"the program may not fit in memory.\n");
+				"the program may not fit in memory.");
 
 		// copy the program to the memory
 		auto m_it = begin(_memory);
@@ -198,7 +198,8 @@ namespace thallium
 			}
 
 			default: {
-				error(TimeOfError::Runtime, ErrorType::Fatal, "illegal instruction : memory[" + std::to_string(ip) + "] has unknown opcode " + std::to_string(_memory[ip]));
+				error(TimeOfError::Runtime, ErrorType::Note, "with %ip = " + std::to_string(ip) + " and instruction with opcode " + std::to_string(_memory[ip]) + ":");
+				error(TimeOfError::Runtime, ErrorType::Fatal, "program tried to reach an invalid instruction.");
 			} break;
 			}
 
@@ -206,7 +207,10 @@ namespace thallium
 				ip += Instruction::size();
 
 			if (ip >= _memory.size())
-				error(TimeOfError::Runtime, ErrorType::Fatal, "illegal instruction : ip pointed to memory[" + std::to_string(ip) + "], but was out of bounds (memory size = " + std::to_string(_memory.size()) + ").");
+			{
+				error(TimeOfError::Runtime, ErrorType::Note, "with %ip = " + std::to_string(ip) + " and memory size " + std::to_string(_memory.size()) + ":");
+				error(TimeOfError::Runtime, ErrorType::Fatal, "program tried to reach an instruction out of memory.");
+			}
 		}
 	}
 }

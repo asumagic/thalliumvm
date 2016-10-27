@@ -23,7 +23,7 @@ namespace thallium
 		 * Returns the exception string for the VM exception.
 		 * \return Exception string
 		 */
-		const char* what() const throw() override;
+		const char* what() const noexcept override;
 
 	private:
 		const char* _swhat;
@@ -67,6 +67,11 @@ namespace thallium
 		 */
 		Warning,
 
+		/**
+		  * Note
+		  */
+		Note,
+
 		_total
 	};
 
@@ -97,20 +102,24 @@ namespace thallium
 	 * \param etime Time of error (pre-run, runtime)
 	 * \param etype Severity
 	 * \param estring Error string
+	 * \param ignore_fatal Defines whether a fatal error should throw a VMException or not.
 	 * \return condition
 	 */
 	bool tassert(const bool condition,
 				  const TimeOfError etime, const ErrorType etype,
-				  const std::string estring);
+				  const std::string estring,
+				  const bool ignore_fatal = false);
 
 	/**
 	 * ThalliumVM error output
 	 * \param etime Time of error (pre-run, runtime)
 	 * \param etype Severity
 	 * \param estring Error string
+	 * \param ignore_fatal Defines whether a fatal error should throw a VMException or not.
 	 */
 	void error(const TimeOfError etime, const ErrorType etype,
-				const std::string estring);
+				const std::string estring,
+				const bool ignore_fatal = false);
 }
 
 #endif
