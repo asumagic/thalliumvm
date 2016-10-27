@@ -43,9 +43,9 @@ namespace thallium
 		mget = 2,
 
 		/**
-		 * <code>mset raddr ro</code>
+		 * <code>mset raddr rsrc</code>
 		 *
-		 * copies ro into the memory value pointed by raddr<br>
+		 * copies rsrc into the memory value pointed by raddr<br>
 		 * <i>argument</i>:<br>
 		 * - 0..15 : address register<br>
 		 * - 16..31 : source register
@@ -135,9 +135,9 @@ namespace thallium
 		sbit = 11,
 
 		/**
-		 * <code>gbit ro rdst i</code>
+		 * <code>gbit rsrc rdst i</code>
 		 *
-		 * sets rdst to the bit in ro at index i
+		 * sets rdst to the bit in rsrc at index i
 		 * <i>argument</i>:<br>
 		 * - 0..15 : source register<br>
 		 * - 16..31 : destination register<br>
@@ -146,9 +146,9 @@ namespace thallium
 		gbit = 12,
 
 		/**
-		 * <code>shr ro rdst roff</code>
+		 * <code>shr rsrc rdst roff</code>
 		 *
-		 * bitshifts ro by roff bits to the right and stores the result in rdst
+		 * bitshifts rsrc by roff bits to the right and stores the result in rdst
 		 * <i>argument</i>:<br>
 		 * - 0..15 : source register
 		 * - 16..31 : destination register
@@ -157,9 +157,9 @@ namespace thallium
 		shr = 13,
 
 		/**
-		 * <code>shl ro rdst roff</code>
+		 * <code>shl rsrc rdst roff</code>
 		 *
-		 * bitshifts ro by roff bits to the left and stores the result in rdst
+		 * bitshifts rsrc by roff bits to the left and stores the result in rdst
 		 * <i>argument</i>:<br>
 		 * - 0..15 : source register
 		 * - 16..31 : destination register
