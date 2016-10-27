@@ -260,7 +260,7 @@ namespace thallium
 		  * <i>argument</i>:<br>
 		  * - 0..15 : source register
 		  */
-		push = 24,
+		push = 22,
 
 		/**
 		  * <code>pop rdst</code>
@@ -269,7 +269,9 @@ namespace thallium
 		  * <i>argument</i>:<br>
 		  * - 0..15 : destination register
 		  */
-		pop = 25,
+		pop = 23,
+
+		__PLACEHOLDER_EXIT
 	};
 
 	/**
