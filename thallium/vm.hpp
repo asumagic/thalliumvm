@@ -23,12 +23,7 @@ namespace thallium
 		 * \return Tuple of decoded arguments
 		 */
 		template<typename... Types>
-		std::tuple<Types...> decode(uint64_t argument)
-		{
-			std::tuple<Types...> ret;
-			decode_consume<0, 0>(ret, argument);
-			return ret;
-		}
+		std::tuple<Types...> decode(uint64_t argument);
 
 		/**
 		 * Imports a program into the VM memory.
@@ -46,7 +41,7 @@ namespace thallium
 		 * Fallback for decode_consume when there aren't anything left in the tuple to consume
 		 */
 		template<size_t TupleIndex, size_t BinOffset, typename TupleT, std::enable_if_t<TupleIndex >= std::tuple_size<TupleT>::value>* = nullptr>
-		void decode_consume(TupleT&, const uint64_t) {}
+		void decode_consume(TupleT&, const uint64_t);
 
 		/**
 		 * Consume-decode a part of the instruction into a single tuple entry, and consume the next one subsequently
@@ -57,34 +52,13 @@ namespace thallium
 		 * \param argument Argument to decode
 		 */
 		template<size_t TupleIndex, size_t BinOffset, typename TupleT, std::enable_if_t<TupleIndex < std::tuple_size<TupleT>::value>* = nullptr>
-		void decode_consume(TupleT& t, const uint64_t argument)
-		{
-			// Typedef the element type
-			typedef std::tuple_element_t<TupleIndex, TupleT> element_t;
-
-			// Get the element we have to process
-			element_t& elem = std::get<TupleIndex>(t);
-
-			// Compute different sizes
-			const size_t elem_bits = sizeof(element_t) * 8;
-			constexpr size_t argument_size = sizeof(argument) * 8;
-
-			constexpr size_t next_index = TupleIndex + 1;
-			constexpr size_t next_offset = BinOffset + elem_bits;
-
-			// Compute how many bits will be crushed on the left
-			constexpr size_t crush_count = (argument_size - elem_bits - BinOffset);
-
-			// Push out the bits on the left, stick to the right border
-			elem = (argument << crush_count) >> (BinOffset + crush_count);
-
-			// Consume the next index
-			decode_consume<next_index, next_offset, TupleT>(t, argument);
-		}
+		void decode_consume(TupleT& t, const uint64_t argument);
 
 		std::vector<uint8_t> _memory;
 		Registers _regs;
 	};
 }
+
+#include "vm.tpp"
 
 #endif
