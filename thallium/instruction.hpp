@@ -130,7 +130,7 @@ namespace thallium
 		 * <i>argument</i>:<br>
 		 * - 0..15 : operand register<br>
 		 * - 16..20 : bit index<br>
-		 * - 21 : value
+		 * - 24 : value
 		 */
 		sbit = 11,
 
@@ -252,27 +252,6 @@ namespace thallium
 		 * - 32..47 : destination register
 		 */
 		umod = 21,
-
-		/**
-		 * <code>dout rsz</code>
-		 *
-		 * sends rsz bytes from dbdata to dbport.<br>
-		 * <i>argument</i>:<br>
-		 * - 0..15 : size register
-		 */
-		dout = 22,
-
-		/**
-		 * <code>din rsz rrecv</code>
-		 *
-		 * receives rsz bytes from dbport to dbdata.<br>
-		 * the actual amount of received bytes is stored in rrecv, since fewer bytes than excepted can be received.<br>
-		 * if more bytes than excepted are to be received, they will be kept in the queue.<br>
-		 * <i>argument</i>:<br>
-		 * - 0..15 : size register
-		 * - 16..31 : received register
-		 */
-		din = 23,
 
 		/**
 		  * <code>push rsrc</code>

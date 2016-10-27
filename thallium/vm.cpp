@@ -101,7 +101,7 @@ namespace thallium
 				const auto darg = decode<uint32_t>(argument);
 
 				// push sp + 1 to the stack
-				uint32_t& sp = _regs[SPRegisters::sp];
+				vmreg_t& sp = _regs[SPRegisters::sp];
 				serialize_type(sp, begin(_memory) + ip + Instruction::size());
 				sp += sizeof(vmreg_t);
 
@@ -113,7 +113,7 @@ namespace thallium
 				const auto darg = decode<uint16_t>(argument);
 
 				// push sp + 1 to the stack
-				uint32_t& sp = _regs[SPRegisters::sp];
+				vmreg_t& sp = _regs[SPRegisters::sp];
 				serialize_type(sp, begin(_memory) + ip + Instruction::size());
 				sp += sizeof(vmreg_t);
 
@@ -121,11 +121,32 @@ namespace thallium
 				goto skip_ip_update;
 			} // goto makes break redundant
 
+			case Opcode::sbit: {
+				const auto darg = decode<uint16_t, uint8_t, uint8_t>(argument);
+
+				vmreg_t& r = _regs[std::get<0>(darg)];
+				const vmreg_t offset = std::get<1>(darg);
+				const uint8_t v = std::get<2>(darg) ? 0 : 1;
+
+				r ^= (v ^ r) & (1 << offset);
+			} break;
+
+			case Opcode::gbit: {
+				const auto darg = decode<uint16_t, uint8_t>(argument);
+				_regs[std::get<1>(darg)] = (_regs[std::get<0>(darg)] >> std::get<1>(darg)) & 0b1;
+			} break;
+
+			case Opcode::shr: {
+				const auto darg = decode<uint16_t, uint16_t, uint16_t>(argument);
+				_regs[std::get<1>(darg)] = _regs[std::get<0>(darg)] >> _regs[std::get<2>(darg)];
+			} break;
+
+			case Opcode::shl: {
+				const auto darg = decode<uint16_t, uint16_t, uint16_t>(argument);
+				_regs[std::get<1>(darg)] = _regs[std::get<0>(darg)] << _regs[std::get<2>(darg)];
+			} break;
+
 				/*
-				case Opcode::sbit:break;
-				case Opcode::gbit:break;
-				case Opcode::shr:break;
-				case Opcode::shl:break;
 				case Opcode::inc:break;
 				case Opcode::dec:break;
 				case Opcode::uadd:break;
@@ -133,8 +154,6 @@ namespace thallium
 				case Opcode::umul:break;
 				case Opcode::udiv:break;
 				case Opcode::umod:break;
-				case Opcode::dout:break;
-				case Opcode::din:break;
 				case Opcode::push:break;
 				case Opcode::pop:break;*/
 
