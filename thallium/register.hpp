@@ -79,7 +79,7 @@ namespace thallium
 		vmreg_t& operator[](const SPRegisters s);
 
 		/**
-		 * Bounds-checked subscript operator for both specific and special purpose.<br>
+		 * Subscript operator for both specific and special purpose.<br>
 		 * General-purpose registers begin at index SPRegisters::total.
 		 * \param index Thallium register index
 		 * \return Reference to a Thallium register

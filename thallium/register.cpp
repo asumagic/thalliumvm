@@ -11,7 +11,7 @@ namespace thallium
 
 	vmreg_t &Registers::operator[](const size_t index)
 	{
-		return _memory.at(index);
+		return _memory[index];
 	}
 }
 
