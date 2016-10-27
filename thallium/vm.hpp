@@ -78,9 +78,6 @@ namespace thallium
 			// Push out the bits on the left, stick to the right border
 			elem = (argument << crush_count) >> (BinOffset + crush_count);
 
-			// Get the new values for the next consumption
-
-
 			// Consume the next index
 			decode_consume<next_index, next_offset, TupleT>(t, argument);
 		}
