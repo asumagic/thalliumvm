@@ -92,20 +92,14 @@ namespace thallium
 		 * \param flag Flag to set
 		 * \param value New state of the flag
 		 */
-		inline void set_flag(const Flags flag, const bool value)
-		{
-			_memory[static_cast<size_t>(SPRegisters::fl)] = static_cast<uint32_t>(value) << static_cast<uint32_t>(flag);
-		}
+		void set_flag(const Flags flag, const bool value);
 
 		/**
 		 * Returns a flag in the FL register.
 		 * \param flag Flag to get
 		 * \return Flag at given index
 		 */
-		bool get_flag(const Flags flag)
-		{
-			return (_memory[static_cast<size_t>(SPRegisters::fl)] >> static_cast<uint32_t>(flag)) & 0b1;
-		}
+		bool get_flag(const Flags flag);
 
 		/**
 		 * \return Thallium specific purpose registers available
