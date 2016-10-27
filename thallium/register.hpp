@@ -36,9 +36,27 @@ namespace thallium
 		 */
 		dbdata = 3,
 
-		// 4 reserved registers
+		/**
+		  * Flag register
+		  */
+		fl = 4,
+
+		// 3 reserved registers
 
 		total = 8
+	};
+
+	/**
+	 * Enum class of ThalliumVM flags in the FL register
+	 */
+	enum class Flags
+	{
+		/**
+		  * TEST flag
+		  *
+		  * Holds the result of the last comparison operation
+		  */
+		Test = 0,
 	};
 
 	/**
@@ -68,6 +86,26 @@ namespace thallium
 		 * \throws std::out_of_range
 		 */
 		vmreg_t& operator[](const size_t index);
+
+		/**
+		 * Sets a flag in the FL register to a given value.
+		 * \param flag Flag to set
+		 * \param value New state of the flag
+		 */
+		inline void set_flag(const Flags flag, const bool value)
+		{
+			_memory[static_cast<size_t>(SPRegisters::fl)] = static_cast<uint32_t>(value) << static_cast<uint32_t>(flag);
+		}
+
+		/**
+		 * Returns a flag in the FL register.
+		 * \param flag Flag to get
+		 * \return Flag at given index
+		 */
+		bool get_flag(const Flags flag)
+		{
+			return (_memory[static_cast<size_t>(SPRegisters::fl)] >> static_cast<uint32_t>(flag)) & 0b1;
+		}
 
 		/**
 		 * \return Thallium specific purpose registers available
