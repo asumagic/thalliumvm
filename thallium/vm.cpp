@@ -112,7 +112,9 @@ namespace thallium
 				case Opcode::udiv:break;
 				case Opcode::umod:break;
 				case Opcode::dout:break;
-				case Opcode::din:break;*/
+				case Opcode::din:break;
+				case Opcode::push:break;
+				case Opcode::pop:break;*/
 
 			default: {
 				error(TimeOfError::Runtime, ErrorType::Fatal, "illegal instruction : memory[" + std::to_string(ip) + "] has unknown opcode " + std::to_string(_memory[ip]));

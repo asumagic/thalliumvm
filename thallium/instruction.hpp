@@ -273,6 +273,24 @@ namespace thallium
 		 * - 16..31 : received register
 		 */
 		din = 23,
+
+		/**
+		  * <code>push rsrc</code>
+		  *
+		  * increments sp by 4 and copies rsrc to the memory pointed by the new sp.
+		  * <i>argument</i>:<br>
+		  * - 0..15 : source register
+		  */
+		push = 24,
+
+		/**
+		  * <code>pop rdst</code>
+		  *
+		  * copies the memory pointed by sp into rdst and decrements sp by 4 afterwards.
+		  * <i>argument</i>:<br>
+		  * - 0..15 : destination register
+		  */
+		pop = 25,
 	};
 
 	/**
