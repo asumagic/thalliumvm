@@ -27,19 +27,9 @@ namespace thallium
 		sp = 1,
 
 		/**
-		 * Data bus port: Refers to the port used/to be used in the current/next data transaction.
-		 */
-		dbport = 2,
-
-		/**
-		 * Data bus data pointer: Refers to the memory address of the first element in the transaction buffer.
-		 */
-		dbdata = 3,
-
-		/**
 		  * Flag register
 		  */
-		fl = 4,
+		fl = 2,
 
 		// 3 reserved registers
 
