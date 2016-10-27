@@ -89,7 +89,7 @@ namespace thallium
 			} break;
 
 			case Opcode::cjmpr: {
-				const auto darg = decode<uint32_t>(argument);
+				const auto darg = decode<uint16_t>(argument);
 				if (_regs.get_flag(Flags::Test))
 				{
 					_regs[SPRegisters::ip] = _regs[std::get<0>(darg)];
@@ -97,9 +97,31 @@ namespace thallium
 				}
 			} break;
 
+			case Opcode::call: {
+				const auto darg = decode<uint32_t>(argument);
+
+				// push sp + 1 to the stack
+				uint32_t& sp = _regs[SPRegisters::sp];
+				serialize_type(sp, begin(_memory) + ip + Instruction::size());
+				sp += sizeof(vmreg_t);
+
+				ip = std::get<0>(darg);
+				goto skip_ip_update;
+			} // goto makes break redundant
+
+			case Opcode::callr: {
+				const auto darg = decode<uint16_t>(argument);
+
+				// push sp + 1 to the stack
+				uint32_t& sp = _regs[SPRegisters::sp];
+				serialize_type(sp, begin(_memory) + ip + Instruction::size());
+				sp += sizeof(vmreg_t);
+
+				ip = _regs[std::get<0>(darg)];
+				goto skip_ip_update;
+			} // goto makes break redundant
+
 				/*
-				case Opcode::call:break;
-				case Opcode::callr:break;
 				case Opcode::sbit:break;
 				case Opcode::gbit:break;
 				case Opcode::shr:break;
